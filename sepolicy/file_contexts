@@ -1,0 +1,29 @@
+/dev/sprd_vsp             u:object_r:graphics_device:s0
+/dev/mali                 u:object_r:graphics_device:s0
+/dev/ump                  u:object_r:graphics_device:s0
+/dev/sprd_rotation	  	  u:object_r:graphics_device:s0
+/dev/sprd_scale	          u:object_r:graphics_device:s0
+/data/system(/.*)?        u:object_r:system_data_file:s0
+
+# rild
+/system/bin/rild_sp   	  u:object_r:rild_sp_exec:s0
+
+# services
+/system/bin/modemd   	  			u:object_r:modemd_exec:s0
+/system/bin/sprd_monitor   	  		u:object_r:sprd_monitor_exec:s0
+/system/bin/at_distributor   	 	u:object_r:at_distributor_exec:s0
+/system/bin/macloader   	  		u:object_r:macloader_exec:s0
+/system/bin/p2p_supplicant   	  	u:object_r:p2p_supplicant_exec:s0
+
+/dev/block/mmcblk0p12                                        u:object_r:userdata_block_device:s0
+/dev/block/mmcblk0p8                                        u:object_r:cache_block_device:s0
+/dev/block/mmcblk0p3                                        u:object_r:efs_block_device:s0
+
+/dev/vbpipe6   	  	u:object_r:mediaserver:s0  
+
+/dev/CHNPTY[0-13]+           u:object_r:radio_device:s0
+/system/bin/ext_data.sh      u:object_r:rild_exec:s0
+/system/bin/ext_kill.sh      u:object_r:rild_exec:s0
+/system/bin/ext_symlink.sh   u:object_r:rild_exec:s0
+
+/data/misc/radio(/.*)?       u:object_r:radio_data_file:s0

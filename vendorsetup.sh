@@ -1,0 +1,2 @@
+add_lunch_combo lineage_logan2g-eng
+add_lunch_combo lineage_logan2g-userdebug

@@ -1,0 +1,69 @@
+#
+# system.prop for logan2g
+#
+
+ro.sf.lcd_density=240
+ro.sf.lcd_width = 52
+ro.sf.lcd_height = 87
+ro.opengles.version=131072
+ro.product.hardware=logan
+ro.lcd_brightness=160
+
+persist.sys.storage_preload=1
+
+# RIL
+ro.ril.telephony.mqanelements=5
+
+ro.kernel.qemu=0
+debug.hwui.render_dirty_regions=false
+persist.sys.force_highendgfx=true
+
+#low RAM optimizations
+config.disable_atlas=true
+dalvik.vm.jit.codecachesize=0
+ro.config.max_starting_bg=8
+ro.sys.fw.bg_apps_limit=16
+# hwui
+ro.hwui.drop_shadow_cache_size=1
+ro.hwui.gradient_cache_size=0.2
+ro.hwui.layer_cache_size=6
+ro.hwui.path_cache_size=2
+ro.hwui.r_buffer_cache_size=1
+ro.hwui.texture_cache_size=8
+
+camera.disable_zsl_mode=1
+
+ro.telephony.ril.socket_name=rild,rild1,rild2
+
+# delay for ConnectivityChange broadcast (ms)
+conn.connectivity_change_delay = 0
+
+# NK console device
+persist.ttydev=ttyVUART0
+
+# MultiTouch support
+ro.product.multi_touch_enabled=true
+ro.product.max_num_touch=2
+
+# Media
+persist.sys.media.use-awesome=true
+
+#Awesome player lateness in ms
+awesome.lateness=200
+gralloc.use_sync_mode=true
+#Streaming player EOS timeout
+nuplayer.eos.timeout=3
+
+#Use vendor/platform codecs in Metadata retriever (for Hawaii H.264)
+sf.metadata_use_plat_sw_codecs=1
+
+#Use vendor/hw codecs in Metadata retriever
+sf.metadata_retrv_hw_codecs=1
+
+persist.sys.usb.config=mtp,adb
+
+# Hardware info
+ro.device.chipset=Spreadtrum SC6820I (45nm)
+ro.device.cpu=ARMv7 1000MHz Single-core ARM Cortex-A5
+ro.device.gpu=Mali-400MP Single Core
+ro.device.screen_res=4' 800x480 pixels ( ~243 ppi)
