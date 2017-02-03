@@ -15,3 +15,6 @@
 /dev/block/mmcblk0p11   /modem2             emmc      defaults 					            defaults
 # vold-managed volumes ("block device" is actually a sysfs devpath)
 /devices/platform/sprd-sdhci.0/mmc_host*      auto  			auto     defaults                                                    voldmanaged=sdcard1:auto,encryptable=userdata
+
+# zram
+/dev/block/zram0			none				swap		defaults		zramsize=419430400,zramstreams=2

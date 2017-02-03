@@ -5,7 +5,6 @@ on early-init
     mkdir /efs 0771 radio system
 
 on init
-    setprop persist.camera.HAL3.enabled 0
     export LD_SHIM_LIBS /system/lib/libutils.so|libsamsung_symbols.so:/system/lib/libril.so|libsamsung_symbols.so:/system/lib/libstagefright.so|libsamsung_symbols.so
     stop ril-daemon
 	symlink /sdcard /mnt/sdcard
@@ -22,6 +21,7 @@ on init
 on fs
     mkdir /productinfo 0774 system system
     mount_all /fstab.sc6820i
+
 on post-fs
     insmod /system/lib/modules/ump.ko
     insmod /system/lib/modules/mali.ko
@@ -83,6 +83,25 @@ on post-fs-data
     chmod 0664 /sys/class/sec_key/sec_powerkey_pressed/key_short
 
 on boot
+    # Flash storage isn't a good entropy source, and only causes
+    # locking overhead in the kernel. Turn it off.
+    write /sys/block/mmcblk0/queue/add_random 0
+    write /sys/block/mmcblk1/queue/add_random 0
+
+    # KSM
+    write /sys/kernel/mm/ksm/deferred_timer 1
+    write /sys/kernel/mm/ksm/pages_to_scan 100
+    write /sys/kernel/mm/ksm/sleep_millisecs 500
+    write /sys/kernel/mm/ksm/run 0
+
+    # Swapping 1 page at a time is ok
+    write /proc/sys/vm/page-cluster 0
+
+    write /proc/sys/vm/swappiness 100
+
+    # increase read-ahead value to 256 kb
+    write /sys/block/mmcblk0/queue/read_ahead_kb 256
+
     chown system system /sys/class/backlight/panel/max_brightness
     chmod 0660 /sys/class/backlight/panel/max_brightness
     chown system system /sys/class/backlight/panel/brightness
