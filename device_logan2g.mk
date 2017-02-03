@@ -35,7 +35,9 @@ $(shell ln -sf -t $(LOCAL_PATH)/../../../out/target/product/logan/recovery/root/
 # Init
 PRODUCT_COPY_FILES += \
     $(LOCAL_PATH)/rootdir/fstab.sc6820i:root/fstab.sc6820i \
+    $(LOCAL_PATH)/rootdir/fstab.swap:root/fstab.swap \
     $(LOCAL_PATH)/rootdir/init.bt.rc:root/init.bt.rc \
+    $(LOCAL_PATH)/rootdir/init.swap.rc:root/init.swap.rc \
     $(LOCAL_PATH)/rootdir/init.sc6820i.rc:root/init.sc6820i.rc \
     $(LOCAL_PATH)/rootdir/init.sc6820i.usb.rc:root/init.sc6820i.usb.rc \
     $(LOCAL_PATH)/rootdir/ueventd.sc6820i.rc:root/ueventd.sc6820i.rc \

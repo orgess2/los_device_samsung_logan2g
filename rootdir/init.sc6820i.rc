@@ -1,5 +1,6 @@
 import init.sc6820i.usb.rc
 import init.bt.rc
+import /init.swap.rc
 
 on early-init
     mkdir /efs 0771 radio system
@@ -100,7 +101,7 @@ on boot
     write /proc/sys/vm/swappiness 100
 
     # increase read-ahead value to 256 kb
-    write /sys/block/mmcblk0/queue/read_ahead_kb 256
+    write /sys/block/mmcblk0/queue/read_ahead_kb 512
 
     chown system system /sys/class/backlight/panel/max_brightness
     chmod 0660 /sys/class/backlight/panel/max_brightness
@@ -448,7 +449,7 @@ service wlandutservice /system/bin/wlandutservice
     disabled
     oneshot
 service macloader /system/bin/macloader
-    class main
+    class late_start
     oneshot
 on property:init.svc.macloader=stopped
     chown system root /data/.cid.info
