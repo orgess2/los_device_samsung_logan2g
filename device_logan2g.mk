@@ -45,7 +45,11 @@ PRODUCT_COPY_FILES += \
     $(LOCAL_PATH)/rootdir/bin/poweroff_alarm:root/bin/poweroff_alarm \
     $(LOCAL_PATH)/rootdir/bin/rawdatad:root/bin/rawdatad \
 
-    
+# f2fs
+PRODUCT_PACKAGES += \
+	fibmap.f2fs \
+	fsck.f2fs \
+	mkfs.f2fs    
 
 
 # Graphics

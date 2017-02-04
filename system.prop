@@ -50,15 +50,22 @@ nuplayer.eos.timeout=3
 
 persist.sys.usb.config=mtp,adb
 
-# Hardware info
-ro.device.chipset=Spreadtrum SC6820I (45nm)
-ro.device.cpu=ARMv7 1000MHz Single-core ARM Cortex-A5
-ro.device.gpu=Mali-400MP Single Core
-ro.device.screen_res=4' 800x480 pixels ( ~243 ppi)
+# Hardware
+ro.sys.fw.trim_enable_memory=536870912
+ro.sys.fw.use_trim_settings=true
+ro.sys.fw.empty_app_percent=25
+ro.sys.fw.trim_empty_percent=50
+ro.sys.fw.trim_cache_percent=50
+ro.sys.fw.bg_apps_limit=16
+persist.sys.strictmode.disable=true
 
 config.disable_atlas=true
 
 # zRAM
 ro.config.zram.compressor=lz4
-ro.config.zram.disksize=200M
+ro.config.zram.disksize=128M
 ro.config.swappiness=100
+
+dalvik.vm.dex2oat-swap=false
+
+camera.disable_zsl_mode=1

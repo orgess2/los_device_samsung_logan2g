@@ -153,16 +153,3 @@ BOARD_HAL_STATIC_LIBRARIES := libhealthd.logan2g
 # SELinux
 BOARD_SEPOLICY_DIRS += \
     device/samsung/logan2g/sepolicy
-
-# ART’s configuration 
-#WITH_DEXPREOPT := true
-#DONT_DEXPREOPT_PREBUILTS := true
-
-# Root
-export WITH_SU=true
-
-# Bionic
-TARGET_NEEDS_PLATFORM_TEXT_RELOCATIONS := true
-# Host specific
-#PRODUCT_PREBUILT_WEBVIEWCHROMIUM := yes
-#ANDROID_COMPILE_WITH_JACK := false
