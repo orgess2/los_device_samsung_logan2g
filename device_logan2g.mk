@@ -29,8 +29,8 @@ DEVICE_PACKAGE_OVERLAYS += device/samsung/logan2g/overlay
 LOCAL_PATH := device/samsung/logan2g
 
 # Softlink sh
-$(shell mkdir -p $(LOCAL_PATH)/../../../out/target/product/logan/recovery/root/system/bin)
-$(shell ln -sf -t $(LOCAL_PATH)/../../../out/target/product/logan/recovery/root/system/bin ../../sbin/sh)
+$(shell mkdir -p $(LOCAL_PATH)/../../../out/target/product/logan2g/recovery/root/system/bin)
+$(shell ln -sf -t $(LOCAL_PATH)/../../../out/target/product/logan2g/recovery/root/system/bin ../../sbin/sh)
 
 # Init
 PRODUCT_COPY_FILES += \

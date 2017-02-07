@@ -4,7 +4,7 @@ $(call inherit-product, vendor/cm/config/telephony.mk)
 # Release name
 PRODUCT_RELEASE_NAME := logan2g
 
-# Inherit some common CM stuff.
+# Inherit some common Lineage stuff.
 $(call inherit-product, vendor/cm/config/common_full_phone.mk)
 
 # Inherit device configuration
@@ -20,3 +20,6 @@ PRODUCT_BUILD_PROP_OVERRIDES += \
 
 PRODUCT_NAME := lineage_logan2g
 PRODUCT_DEVICE := logan2g
+
+# Root
+WITH_SU=true

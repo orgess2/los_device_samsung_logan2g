@@ -66,6 +66,4 @@ ro.config.zram.compressor=lz4
 ro.config.zram.disksize=128M
 ro.config.swappiness=100
 
-dalvik.vm.dex2oat-swap=false
-
 camera.disable_zsl_mode=1
