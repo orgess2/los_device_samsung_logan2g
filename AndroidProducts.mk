@@ -15,5 +15,6 @@
 #
 
 PRODUCT_MAKEFILES := \
-    $(LOCAL_DIR)/full_logan2g.mk 
+    $(LOCAL_DIR)/omni_logan2g.mk \
+    $(LOCAL_DIR)/aosp_logan2g.mk
 

@@ -1,2 +1,1 @@
-add_lunch_combo lineage_logan2g-eng
-add_lunch_combo lineage_logan2g-userdebug
+add_lunch_combo omni_logan2g-userdebug

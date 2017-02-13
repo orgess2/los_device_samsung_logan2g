@@ -30,7 +30,6 @@
 /dev/ttyVUART0          0660     system  system
 /dev/ttyGS0             0660     system  system
 /dev/ttyGS1             0660     system  system
-/dev/CHNPTY*		0660	 system	 radio
 
 /dev/gpsctl             0660     system      system
 

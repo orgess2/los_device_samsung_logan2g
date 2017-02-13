@@ -1,130 +1,157 @@
 import init.sc6820i.usb.rc
 import init.bt.rc
-import /init.swap.rc
 
 on early-init
+    loglevel 7
     mkdir /efs 0771 radio system
 
 on init
-    export LD_SHIM_LIBS /system/lib/libutils.so|libsamsung_symbols.so:/system/lib/libril.so|libsamsung_symbols.so:/system/lib/libstagefright.so|libsamsung_symbols.so
-    stop ril-daemon
-	symlink /sdcard /mnt/sdcard
-        symlink /sdcard /storage/sdcard0
-	export SECONDARY_STORAGE /storage/sdcard1
-	mkdir /mnt/media_rw/sdcard1 0700 media_rw media_rw
-	mkdir /storage/sdcard1 0700 root root
+    mkdir /mnt/shell/emulated 0700 shell shell
+    mkdir /storage 0550 system sdcard_r
+    mkdir /storage/emulated 0555 root root
+    export EXTERNAL_STORAGE /storage/emulated/legacy
+    export EMULATED_STORAGE_SOURCE /mnt/shell/emulated
+    export EMULATED_STORAGE_TARGET /storage/emulated
+    # Support legacy paths
+    symlink /storage/emulated/legacy /sdcard
+    symlink /storage/emulated/legacy /mnt/sdcard
+    symlink /storage/emulated/legacy /storage/sdcard0
+    symlink /mnt/shell/emulated/0 /storage/emulated/legacy
+
+    mkdir /storage/sdcard1 0775 system system
+    export SECONDARY_STORAGE /storage/sdcard1
+    mkdir /mnt/media_rw/sdcard1 0700 media_rw media_rw
+    mkdir /storage/sdcard1 0700 root root
+
+    # For backwards compatibility
+    symlink /storage/sdcard1 /external_sd
+    symlink /storage/sdcard1 /mnt/extSdCard
 
 # To store widevine keybox
     symlink /data/app /factory
+
     symlink /efs /factory
-    symlink /dev/block/mmcblk0p11 /dev/block/param
+
+    symlink /dev/block/mmcblk0p4 /dev/block/param
 
 on fs
     mkdir /productinfo 0774 system system
     mount_all /fstab.sc6820i
-
+    swapon_all /fstab.sc6820i
+    setprop ro.crypto.fuse_sdcard true
 on post-fs
     insmod /system/lib/modules/ump.ko
     insmod /system/lib/modules/mali.ko
-
-    restorecon_recursive /efs
+    chown system system /productinfo
+    chmod 0774 /productinfo
+    mount -o remount,rw /productinfo
     chown radio system /efs
     chmod 0771 /efs
-
-    # ko files for exfat
-    insmod /system/lib/modules/exfat_core.ko
-    insmod /system/lib/modules/exfat_fs.ko
-    
 on post-fs-data
-    # we will remap this as /storage/sdcard0 with the sdcard fuse tool
-    mkdir /data/misc/sensors 0775 system system
-
-    # Set indication (checked by vold) that we have finished this action
-    setprop vold.post_fs_data_done 1
-
-    # Wifi
-    mkdir /data/misc/wifi 0775 wifi system
+# we will remap this as /storage/sdcard0 with the sdcard fuse tool
+    mkdir /data/media 0775 media_rw media_rw
+    chown media_rw media_rw /data/media
+# for Wifi
     mkdir /efs/wifi 0775 radio system
     mkdir /efs/bluetooth 0775 radio system
-    mkdir /efs/sensor 0775 radio system
     mkdir /efs/imei 0775 radio system
+    mkdir /efs/sensor 0775 radio system
     mkdir /efs/audio 0775 system system
-    chmod 0660 /data/misc/wifi/wpa_supplicant.conf
+    mkdir /data/misc/wifi 0775 wifi system
     mkdir /data/misc/wifi/sockets 0770 wifi wifi
     mkdir /data/misc/dhcp 0775 dhcp dhcp
-    mkdir /data/misc/vpn/profiles 0770 system system
-    chown dhcp dhcp /data/misc/dhcp
-    chown system system /efs/wifi/.mac.info
-    chmod 0664 /efs/wifi/.mac.info
     mkdir /data/misc/radio 0775 radio system
-    mkdir /data/anr 0775 system system
+    mkdir /data/misc/sensors 0775 system system
     mkdir /system/etc/wifi 0775 wifi wifi
-
-    # for TRP/TIS
+    chown system system /efs/wifi/.mac.info
+    chown dhcp dhcp /data/misc/dhcp
+    chmod 0664 /efs/wifi/.mac.info
+    chmod 0660 /data/misc/wifi/wpa_supplicant.conf
+    setprop wifi.interface wlan0
+# for TRP/TIS
     write /data/.psm.info 1
     chown system root /data/.psm.info
     chmod 0660 /data/.psm.info
-
+# for Broadcom FMRadio
+    chmod 0777 /system/bin/btld
+    setprop service.brcm.bt.pbap_mode btld
+# For security reasons, /data/local/tmp should always be empty.
+# Do not place files or directories in /data/local/tmp
+    mkdir /data/anr 0775 system system
+    mkdir /data/local/audio_tmp 0771 system system
+# SA, System SW, SAMSUNG create log directory
+    mkdir /data/log 0775 system log
+    chown system log /data/log
+    chmod 0775 /data/log
+    chmod 0775 /data/anr
 # MTP permission
 	chmod 0660 /dev/usb_mtp_gadget
 	chown system system /dev/usb_mtp_gadget
-	
+# Set indication (checked by vold) that we have finished this action
+    setprop vold.post_fs_data_done 1
 # tsp fw update permission
     chmod 664 /dev/zinitix_touch_misc
     chown system system /sys/class/sec/tsp/cmd
-    chmod 0664 /sys/class/sec/tsp/cmd 
+    chmod 0664 /sys/class/sec/tsp/cmd
     chown system system /sys/class/sec/sec_touchscreen/tsp_firm_update
     chmod 0664 /sys/class/sec/sec_touchscreen/tsp_firm_update
-    chown system system /sys/class/sec/sec_touchscreen/set_lowIntensity
-    chmod 0664 /sys/class/sec/sec_touchscreen/set_lowIntensity
 # key press path permission
-    chown system system /sys/class/sec_key/sec_key_pressed/key_short
-    chmod 0664 /sys/class/sec_key/sec_key_pressed/key_short
-    chown system system /sys/class/sec_key/sec_powerkey_pressed/key_short
-    chmod 0664 /sys/class/sec_key/sec_powerkey_pressed/key_short
-
+    chown system system /sys/class/sec/sec_key/sec_key_pressed
+    chmod 0664 /sys/class/sec/sec_key/sec_key_pressed
 on boot
-    # increase read-ahead value to 256 kb
-    write /sys/block/mmcblk0/queue/read_ahead_kb 256
 
+# RTCC Interval		
+    write /sys/module/lowmemorykiller/parameters/min_interval 500
+# SISO-ANDR-PERF :: START Changing governor to performance and scheduler to noop once boot is started
+    write /sys/devices/system/cpu/cpu0/cpufreq/scaling_governor	performance
+    write /sys/block/mmcblk0/queue/scheduler noop
+    write /sys/fs/selinux/enforce 0
+    write /sys/kernel/mm/ksm/pages_to_scan 100
+    write /sys/kernel/mm/ksm/sleep_millisecs 500
+    write /sys/kernel/mm/ksm/run 1
+    write /proc/sys/vm/page-cluster 0
+# SISO-ANDR-PERF :: END HERE
+# Permissions for System Server and daemons.
+    chown system system /sys/power/release_wakelock
+    chmod 0660 /sys/power/release_wakelock
+# Brightness
     chown system system /sys/class/backlight/panel/max_brightness
     chmod 0660 /sys/class/backlight/panel/max_brightness
     chown system system /sys/class/backlight/panel/brightness
     chmod 0660 /sys/class/backlight/panel/brightness
-
-    # TelephonyManager.java requires this
-    chmod 0644 /proc/cmdline
-
-#Sensor permission
+# Battery node
+    chown system radio /sys/class/power_supply/battery/batt_lp_charging
+    chown system radio /sys/class/power_supply/battery/batt_read_adj_soc
+    chown system radio /sys/class/power_supply/battery/batt_read_raw_soc
+    chown system radio /sys/class/power_supply/battery/batt_reset_soc
+    chown system radio /sys/class/power_supply/battery/batt_temp_adc
+    chown system radio /sys/class/power_supply/battery/batt_temp_adc_aver
+    chown system radio /sys/class/power_supply/battery/batt_temp_aver
+    chown system radio /sys/class/power_supply/battery/batt_type
+# AND3_SPRD
+# SEC_PRODUCT_FEATURE_COMMON_USE_MULTISIM
+#   simslot 1
+#   setprop ro.multisim.simslotcount 1
+#   simslot 2
+    setprop ro.multisim.simslotcount 2
+#   simslot 3
+#   setprop ro.multisim.simslotcount 3
+# Sensor permission
     chown system system /dev/i2c-2
     chmod 664 /dev/i2c-2
     chown system system /sys/class/input/input0/enable
     chown system system /sys/class/input/input0/poll_delay
     chmod 0660 /sys/class/input/input0/enable
     chmod 0660 /sys/class/input/input0/poll_delay
- 
 # Accelerometer_sensor
-    chown system radio /dev/accelerometer
     chown system radio /sys/class/sensors/accelerometer_sensor
     chown system radio /sys/class/sensors/accelerometer_sensor/raw_data
     chown system radio /sys/class/sensors/accelerometer_sensor/calibration
     chown system radio /sys/class/sensors/accelerometer_sensor/accel_cal_open
     chown system radio /sys/class/sensors/accelerometer_sensor/reactive_alert
-    chown system radio /sys/class/sensors/accelerometer_sensor/vendor
-    chown system radio /sys/class/sensors/accelerometer_sensor/name
-
-#permissions for bluetooth
-chown bluetooth net_bt_stack  /dev/ttyS0
-    chmod 666 /dev/ttyS0
-    chmod 660 /proc/bluetooth/sleep/proto
-    chmod 660 /sys/class/rfkill/rfkill0/state
-    chmod 660 /sys/class/rfkill/rfkill0/type
-    chown bluetooth bluetooth /sys/class/rfkill/rfkill0/state
-    chown bluetooth bluetooth /sys/class/rfkill/rfkill0/type
-    chown bluetooth system /proc/bluetooth/sleep/proto
+# permissions for bluetooth
     setprop ro.bt.bdaddr_path "/efs/bluetooth/bt_addr"
     chown bluetooth bluetooth ro.bt.bdaddr_path
-
 # Root Permission
     chmod 660 /proc/nk/resume
     chmod 660 /proc/nk/restart
@@ -135,171 +162,83 @@ chown bluetooth net_bt_stack  /dev/ttyS0
     chown system root /proc/nk/guest-02/dsp_bank
     chown system root /proc/nk/guest-02/guestOS_2_bank
     chown system system /sys/class/power_supply/*
-
-# Accelerometer_sensor
-    chown system radio /dev/accelerometer
-    chown system radio /sys/class/sensors/accelerometer_sensor
-    chown system radio /sys/class/sensors/accelerometer_sensor/raw_data
-    chown system radio /sys/class/sensors/accelerometer_sensor/calibration
-    chown system radio /sys/class/sensors/accelerometer_sensor/reactive_alert
-    chown system radio /sys/class/sensors/accelerometer_sensor/vendor
-    chown system radio /sys/class/sensors/accelerometer_sensor/name
-    chown system radio /sys/class/sensors/accelerometer_sensor/selftest
-
-# fake some battery state
-    setprop status.battery.state Slow
-    setprop status.battery.level 10
-    setprop status.battery.level_raw  100
-    setprop status.battery.level_scale 10
-
-# Audio (Earjack)
-    mkdir /data/local/audio_tmp 0771 system system
-    chown system radio /sys/class/audio/earjack/key_state
-    chown system radio /sys/class/audio/earjack/state
-    chown media system /sys/class/audio/earjack/reselect_jack
-
-# Battery node
-    chown system radio /sys/class/power_supply/battery/batt_charging_source
-    chown system radio /sys/class/power_supply/battery/batt_error_test
-    chown system radio /sys/class/power_supply/battery/batt_lp_charging
-    chown system radio /sys/class/power_supply/battery/batt_read_adj_soc
-    chown system radio /sys/class/power_supply/battery/batt_read_raw_soc
-    chown system radio /sys/class/power_supply/battery/batt_reset_soc
-    chown system radio /sys/class/power_supply/battery/batt_slate_mode
-    chown system radio /sys/class/power_supply/battery/batt_temp_adc
-    chown system radio /sys/class/power_supply/battery/batt_temp_adc_aver
-    chown system radio /sys/class/power_supply/battery/batt_temp_adc_cal
-    chown system radio /sys/class/power_supply/battery/batt_temp_aver
-    chown system radio /sys/class/power_supply/battery/batt_type
-    chown system radio /sys/class/power_supply/battery/batt_vf_adc
-    chown system radio /sys/class/power_supply/battery/batt_vfocv
-    chown system radio /sys/class/power_supply/battery/batt_vol_adc
-    chown system radio /sys/class/power_supply/battery/batt_vol_adc_aver
-    chown system radio /sys/class/power_supply/battery/batt_vol_adc_cal
-    chown system radio /sys/class/power_supply/battery/batt_vol_aver
-    chown system radio /sys/class/power_supply/battery/factory_mode
-    chown system radio /sys/class/power_supply/battery/siop_activated
-    chown system radio /sys/class/power_supply/battery/siop_level
-    chown system radio /sys/class/power_supply/battery/update
-    chown system radio /sys/class/power_supply/battery/wc_status
-    chown system radio /sys/class/power_supply/battery/wpc_pin_state
-    chown system radio /sys/class/power_supply/fuelgauge/fg_curr_ua
-
-# CTIA event
-   chown sdcard_rw sdcard_rw /sys/class/power_supply/battery/call
-   chown sdcard_rw sdcard_rw /sys/class/power_supply/battery/video
-   chown sdcard_rw sdcard_rw /sys/class/power_supply/battery/music
-   chown sdcard_rw sdcard_rw /sys/class/power_supply/battery/browser
-   chown sdcard_rw sdcard_rw /sys/class/power_supply/battery/hotspot
-   chown sdcard_rw sdcard_rw /sys/class/power_supply/battery/camera
-   chown system radio /sys/class/power_supply/battery/talk_wcdma
-   chown system radio /sys/class/power_supply/battery/talk_gsm
-   chown system radio /sys/class/power_supply/battery/call
-   chown system radio /sys/class/power_supply/battery/data_call
-   chown gps radio /sys/class/power_supply/battery/gps
-   chown system radio /sys/class/power_supply/battery/wifi
-   chown system radio /sys/class/power_supply/battery/lte
-
-# Permissions for touch
-    chown system radio /sys/class/sec/tsp/cmd
-
-# Permissions for Touchkey
-    chown system radio /sys/class/sec/sec_touchkey/enable_disable 
-    chown system radio /sys/class/sec/sec_touchkey/touchkey_brightness
-    chown system radio /sys/class/sec/sec_touchkey/touchkey_menu
-    chown system radio /sys/class/sec/sec_touchkey/touchkey_back
-    chown system radio /sys/class/sec/sec_touchkey/touch_update
-    chown system radio /sys/class/sec/sec_touchkey/touch_version
-    chown system radio /sys/class/sec/sec_touchkey/touchkey_firm_version_panel
-    chown system radio /sys/class/sec/sec_touchkey/touchkey_firm_version_phone
-    chown system radio /sys/class/sec/sec_touchkey/touchkey_firm_update_status
-    chown system radio /sys/class/sec/sec_touchkey/touchkey_firm_update
-    chown system radio /sys/class/sec/sec_touchkey/touch_sensitivity
-    chown system radio /sys/class/sec/sec_touchkey/touchkey_threshold
-    chown system system /sys/devices/virtual/sec/sec_touchkey/brightness
-
-# Permissions for Camera
-    chown system radio /sys/class/camera/rear/rear_camfw
-    chown system radio /sys/class/camera/rear/rear_camtype
-    chown system radio /sys/class/camera/rear/rear_flash
-    chown system radio /sys/class/camera/front/front_camfw
-    chown system radio /sys/class/camera/front/front_camtype
-    chmod 220 /sys/class/camera/rear/rear_camfw
-    chmod 220 /sys/class/camera/rear/rear_camtype
-
-# Switch Device
-    chown system radio /sys/class/sec/switch/adc
-
-#on property:ro.debuggable=1
+    chmod 666 /dev/ttyS0
+    chmod 660 /proc/bluetooth/sleep/proto
+    chmod 660 /sys/class/rfkill/rfkill0/state
+    chmod 660 /sys/class/rfkill/rfkill0/type
+    chown bluetooth bluetooth /sys/class/rfkill/rfkill0/state
+    chown bluetooth bluetooth /sys/class/rfkill/rfkill0/type
+    chown bluetooth system /proc/bluetooth/sleep/proto
+# on property:ro.debuggable=1
     mount debugfs debugfs /sys/kernel/debug
     chmod 220 /sys/kernel/debug/system/dopanic
     chown system system /sys/kernel/debug/system/dopanic
-# GPIO DVS
-    chown radio system /sys/class/secgpio_check/secgpio_check_all/gpio_sleep_debug
-    chown radio system /sys/class/secgpio_check/secgpio_check_all/check_init_detail
-    chown radio system /sys/class/secgpio_check/secgpio_check_all/gpioinit_check
-    chown radio system /sys/class/secgpio_check/secgpio_check_all/gpiosleep_check
-    chown radio system /sys/class/secgpio_check/secgpio_check_all/secgpio_ctrl
-    chown radio system /sys/class/secgpio_check/secgpio_check_all/checked_sleepGPIO
-
-#start rawdata daemon.
-#service rawdatad /bin/rawdatad
-#    class core
-#    user system
-#    group system
-#    oneshot
-#start nvitem daemon.
+# This property trigger has added to imitiate the previous behavior of "adb root".
+# The adb gadget driver used to reset the USB bus when the adbd daemon exited,
+# and the host side adb relied on this behavior to force it to reconnect with the
+# new adbd instance after init relaunches it. So now we force the USB bus to reset
+# here when adbd sets the service.adb.root property to 1.  We also restart adbd here
+# rather than waiting for init to notice its death and restarting it so the timing
+# of USB resetting and adb restarting more closely matches the previous behavior.
+on property:service.adb.root=1
+    write /sys/class/android_usb/android0/enable 0
+    restart adbd
+    write /sys/class/android_usb/android0/enable 1
+# start nvitem daemon.
 service nvm_daemon /system/bin/nvm_daemon
     #class main
     class core
     user system
     group system radio shell
     oneshot
-#start samsung daemon.
+# start samsung daemon.
 service ss_daemon /system/bin/ss_daemon
     class main
     user system
     group system radio shell
     oneshot
-#telephony service
+# telephony service
 service sprd_monitor /system/bin/sprd_monitor
     class core
     user system
     group system radio shell
     oneshot
-
-# serial_no permission change
-    chmod 0770 /efs/FactoryApp/serial_no
-    chown system system /efs/FactoryApp/serial_no
-
 service modemd /system/bin/modemd
-    class main
+    #class main
+    class core
+    socket modem stream 660 system system
     user system
     group system radio
     oneshot
-service engpcclient /system/bin/engpcclient
+#service engpcclient /system/bin/engpcclient
+#    #class main
+#    class core
+#    user system
+#    group system radio
+#    disabled
+#    oneshot
+#service engservice /system/bin/engservice
+#    #class main
+#    class core
+#    user system
+#    group system
+#    disabled
+#    oneshot
+#service engmodemclient /system/bin/engmodemclient
+#    #class main
+#    class core
+#    user system
+#    group system radio
+#    disabled
+#    oneshot
+##	-iwlan0 -Dnl80211 -c/data/misc/wifi/wpa_supplicant.conf -N \
+service p2p_supplicant /system/bin/p2p_supplicant \
+	-ip2p0 -Dnl80211 -c/data/misc/wifi/p2p_supplicant.conf -e/data/misc/wifi/entropy.bin -puse_p2p_group_interface=1
     class main
-    user system
-    group system radio
-    disabled
-    oneshot
-service engservice /system/bin/engservice
-    class main
-    user system
-    group system
-    disabled
-    oneshot
-service engmodemclient /system/bin/engmodemclient
-    class main
-    user system
-    group system radio
-    disabled
-    oneshot
-service wpa_supplicant /system/bin/logwrapper /system/bin/wpa_supplicant \
-    -iwlan0 -Dnl80211 -c/data/misc/wifi/wpa_supplicant.conf \
-    -I/system/etc/wifi/wpa_supplicant_overlay.conf \
-    -e/data/misc/wifi/entropy.bin \
-    -O/data/misc/wifi/sockets -g@android:wpa_wlan0
+	disabled
+	oneshot
+service wpa_supplicant /system/bin/wpa_supplicant \
+    -Dnl80211 -iwlan0 -e/data/misc/wifi/entropy.bin -c/data/misc/wifi/wpa_supplicant.conf
     #   we will start as root and wpa_supplicant will switch to user wifi
     #   after setting up the capabilities required for WEXT
     #   user wifi
@@ -308,23 +247,6 @@ service wpa_supplicant /system/bin/logwrapper /system/bin/wpa_supplicant \
     socket wpa_wlan0 dgram 660 wifi wifi
     disabled
     oneshot
-
-service p2p_supplicant /system/bin/logwrapper /system/bin/wpa_supplicant \
-    -iwlan0 -Dnl80211 -c/data/misc/wifi/wpa_supplicant.conf \
-    -I/system/etc/wifi/wpa_supplicant_overlay.conf -N \
-    -ip2p0 -Dnl80211 -c/data/misc/wifi/p2p_supplicant.conf \
-    -I/system/etc/wifi/p2p_supplicant_overlay.conf \
-    -e/data/misc/wifi/entropy.bin -puse_p2p_group_interface=1 \
-    -O/data/misc/wifi/sockets -g@android:wpa_wlan0
-#   we will start as root and wpa_supplicant will switch to user wifi
-#   after setting up the capabilities required for WEXT
-#   user wifi
-#   group wifi inet keystore
-    class main
-    socket wpa_wlan0 dgram 660 wifi wifi
-    disabled
-    oneshot
-
 service dhcpcd_wlan0 /system/bin/dhcpcd -ABKL
     class main
     disabled
@@ -361,34 +283,30 @@ service phoneserver_2sim /system/bin/phoneserver_2sim
 service calibrationinit /system/bin/calibration_init
     class main
     oneshot
-#service vcharged /bin/vcharged
-#    class core
-#    user system
-#    group system
-#    oneshot
-
 service charge /bin/charge
     class charger
     user root
     oneshot
-#AND3_SPRD
-#rild service
-service sprd-ril-daemon /system/bin/rild_sp  -l /system/lib/libreference-ril.so -- -n 0
+# AND3_SPRD
+# rild service
+service ril-daemon /system/bin/rild_sp  -l /system/lib/libreference-ril.so -- -n 0
     class main
     socket rild stream 660 root radio
     socket rild-debug stream 660 radio system
     user root
     group radio cache inet misc audio sdcard_rw log sdcard_r
-service sprd-ril-daemon2 /system/bin/rild_sp  -l /system/lib/libreference-ril.so -- -n 1
+service ril-daemon2 /system/bin/rild_sp  -l /system/lib/libreference-ril.so -- -n 1
     class main
     socket rild1 stream 660 root radio
     socket rild-debug1 stream 660 radio system
     user root
     group radio cache inet misc audio sdcard_rw log sdcard_r
-
-on property:persist.msms.phone_count=2
-    start ril-daemon2
-
+# create virtual SD card at /storage/sdcard0, based on the /data/media directory
+# daemon will drop to user/group system/media_rw after initializing
+# underlying files in /data/media will be created with user and group media_rw (1023)
+service sdcard /system/bin/sdcard /data/media /mnt/shell/emulated 1023 1023
+    class late_start
+    oneshot
 service akmd /system/bin/akmd8975 -m 3
     class main
     oneshot
@@ -396,32 +314,27 @@ service slog /system/bin/slog
     class main
     user system
     group system shell radio log
-#service mfserial /system/bin/mfserial ts0710mux9 ttyS1 1
-#    class main
-#    user root
-
-#create symlink
+# create symlink
 service smd_symlink /system/bin/ext_symlink.sh -u
     user root
     disabled
     oneshot
-#data on
+# data on
 service data_on /system/bin/ext_data.sh  -u
     user root
     disabled
     oneshot
-#data off
+# data off
 service data_off /system/bin/ext_data.sh  -d
    user root
 	disabled
 	oneshot
-#change owner
+# change owner
 service chown_service /system/bin/ext_chown.sh  -c
     class main
     user root
     oneshot
-
-#for WiFi MFG(TestMode)
+# for WiFi MFG(TestMode)
 service mfgloader /system/bin/mfgloader
 	class main
     disabled
@@ -433,7 +346,7 @@ service wlandutservice /system/bin/wlandutservice
     disabled
     oneshot
 service macloader /system/bin/macloader
-    class late_start
+    class main
     oneshot
 on property:init.svc.macloader=stopped
     chown system root /data/.cid.info
@@ -441,38 +354,25 @@ on property:init.svc.macloader=stopped
     chown system root /data/.rev
     chmod 0660 /data/.rev
 # end of wifi
-#datarouter
-service DR-daemon /system/bin/ddexe
+service dbus /system/bin/dbus-daemon --system --nofork
     class main
+    socket dbus stream 660 bluetooth bluetooth
+    user bluetooth
+    group bluetooth net_bt_admin
+# Make sure we startup btld before hcid
+service btld /system/bin/btld -lpm 0
     user root
-    group system radio inet net_raw
-service KIES-daemon /system/bin/kiesexe
-    class main
-    user root
-    group system radio inet net_raw
-service SMD-daemon /system/bin/smdexe
-    class main
-    user root
-    group system radio inet net_raw
-service DTT-daemon /system/bin/dttexe
-    class main
-    user root
-    group system radio inet net_raw
-service BCS-daemon /system/bin/connfwexe
-    class main
-    user root
-    group system radio inet net_raw
-service mobex-daemon /system/bin/npsmobex
-    class main
-    user system
-    group system inet sdcard_rw
+    group bluetooth net_bt_admin
+    disabled
+    oneshot
 # AT Distributor for factory test
-service at_distributor /system/bin/at_distributor
-    class main
-    user root
-    group radio log
+#service at_distributor /system/bin/at_distributor
+#    class main
+#    user root
+#    group radio log
+#on property:ro.dumpstate.dmesg=1
+#    write /proc/sys/kernel/dmesg_restrict 0
 # For Datarouter
-    chown system system /dev/dun
     chown system system /dev/ttyGS0
     chown system system /dev/ttyGS1
     chown system system /dev/ttyGS2
@@ -485,16 +385,8 @@ service btld  /system/bin/btld -lpm 0 -hb 3000000
     group bluetooth net_bt_admin
     disabled
     oneshot
-# RTCC
-service rtccd /system/bin/rtccd -a 100M
-    class core
-    user root
-    oneshot
-
-on property:ro.dumpstate.dmesg=1
-    write /proc/sys/kernel/dmesg_restrict 0
-
-# set LMK watermark as {14M,20M,24M,32M,38M,48M}
-on property:lmk.autocalc=false
-    write /sys/module/lowmemorykiller/parameters/adj 0,1,3,5,9,15
-    write /sys/module/lowmemorykiller/parameters/minfree 3584,5120,6144,8192,9728,12288
+# SISO-ANDR-PERF :: START Changing governor to ondemand and scheduler to cfq after boot complete
+on property:sys.boot_completed=1
+    write /sys/devices/system/cpu/cpu0/cpufreq/scaling_governor	ondemand
+    write /sys/block/mmcblk0/queue/scheduler cfq
+# SISO-ANDR-PERF :: END HERE
