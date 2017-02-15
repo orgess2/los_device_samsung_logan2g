@@ -50,3 +50,4 @@
 /dev/ptmx               0666     system  system
 /dev/input/event0       0666     system  system
 /dev/umts_router        0666     system  system
+/data/misc/sensors      0666     system  system

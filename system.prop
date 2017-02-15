@@ -44,10 +44,6 @@ persist.ttydev=ttyVUART0
 ro.product.multi_touch_enabled=true
 ro.product.max_num_touch=2
 
-gralloc.use_sync_mode=true
-#Streaming player EOS timeout
-nuplayer.eos.timeout=3
-
 persist.sys.usb.config=mtp,adb
 
 # Hardware
@@ -65,5 +61,3 @@ config.disable_atlas=true
 ro.config.zram.compressor=lz4
 ro.config.zram.disksize=128M
 ro.config.swappiness=100
-
-camera.disable_zsl_mode=1

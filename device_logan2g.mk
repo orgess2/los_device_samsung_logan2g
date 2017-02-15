@@ -43,18 +43,12 @@ PRODUCT_COPY_FILES += \
     $(LOCAL_PATH)/rootdir/ueventd.sc6820i.rc:root/ueventd.sc6820i.rc \
     $(LOCAL_PATH)/rootdir/bin/charge:root/bin/charge \
     $(LOCAL_PATH)/rootdir/bin/poweroff_alarm:root/bin/poweroff_alarm \
-    $(LOCAL_PATH)/rootdir/bin/rawdatad:root/bin/rawdatad \
-
-# f2fs
-PRODUCT_PACKAGES += \
-	fibmap.f2fs \
-	fsck.f2fs \
-	mkfs.f2fs    
+    $(LOCAL_PATH)/rootdir/bin/rawdatad:root/bin/rawdatad     
 
 
 # Graphics
 PRODUCT_PROPERTY_OVERRIDES += \
-    ro.opengles.version=131072 \
+    ro.opengles.version=131072 
 
 # Board-Pecific
 PRODUCT_PACKAGES += \
@@ -188,8 +182,8 @@ PRODUCT_PACKAGES += \
     
 # Camera
 PRODUCT_PACKAGES += \
-    Snap \
     Gallery2 \
+    Snap \
     libmemoryheapion
 
 PRODUCT_DEFAULT_PROPERTY_OVERRIDES += \
