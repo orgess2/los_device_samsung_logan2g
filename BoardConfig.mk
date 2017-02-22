@@ -53,7 +53,6 @@ BOARD_KERNEL_PAGESIZE := 2048
 TARGET_KERNEL_SOURCE := kernel/samsung/logan2g
 TARGET_KERNEL_CONFIG := cyanogenmod-logan2g_defconfig
 TARGET_USES_UNCOMPRESSED_KERNEL := true
-TARGET_PREBUILT_KERNEL := device/samsung/logan2g/kernel
 KERNEL_TOOLCHAIN_PREFIX := arm-eabi-
 
 # Partitions
@@ -89,12 +88,14 @@ BOARD_EGL_WORKAROUND_BUG_10194508 := true
 BOARD_EGL_NEEDS_FNW := true
 TARGET_RUNNING_WITHOUT_SYNC_FRAMEWORK := TRUE
 NEEDS_LOGAN_MEMORYHEAPION := true
+BOARD_EGL_CFG := device/samsung/logan2g/egl/egl.cfg
 
 # Fix shutdown
 WITH_CM_CHARGER := false
 
 # Camera
 COMMON_GLOBAL_CFLAGS += -DMR0_CAMERA_BLOB
+TARGET_HAS_LEGACY_CAMERA_HAL1 := true
 
 # RIL
 BOARD_RIL_CLASS += ../../../device/samsung/logan2g/ril

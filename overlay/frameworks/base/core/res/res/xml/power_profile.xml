@@ -24,7 +24,7 @@
   <item name="bluetooth.active">142</item>
   <item name="bluetooth.on">0.3</item>
   <item name="bluetooth.at">35690</item>
-  <item name="screen.full">260</item>
+  <item name="screen.full">240</item>
   <item name="wifi.on">4</item>
   <item name="wifi.active">120</item>
   <item name="wifi.scan">220</item>
@@ -58,9 +58,8 @@
       <value>55.4</value>
       <value>82.1</value>
       <value>113.7</value>
-      <value>140.0</value>
-      <value>170.0</value>
-      <value>200.0</value>
+      <value>205.4</value>
+      <value>259.0</value>
   </array>
   <!-- This is the battery capacity in mAh -->
   <item name="battery.capacity">1500</item>

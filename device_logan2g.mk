@@ -82,7 +82,13 @@ PRODUCT_PACKAGES += \
 	audio.usb.default \
 	audio.r_submix.default \
 	libtinyalsa \
-	tinymix
+	tinymix \
+    busybox 
+
+# Graphics
+PRODUCT_PACKAGES += \
+	gralloc.sc6820i \
+	libUMP
 	
 # Idc
 PRODUCT_COPY_FILES += \
@@ -183,6 +189,7 @@ PRODUCT_PACKAGES += \
 # Camera
 PRODUCT_PACKAGES += \
     Gallery2 \
+    camera.sc6820i \
     Snap \
     libmemoryheapion
 

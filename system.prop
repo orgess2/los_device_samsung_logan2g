@@ -61,3 +61,6 @@ config.disable_atlas=true
 ro.config.zram.compressor=lz4
 ro.config.zram.disksize=128M
 ro.config.swappiness=100
+
+persist.sys.root_access=1
+camera.disable_zsl_mode=1
