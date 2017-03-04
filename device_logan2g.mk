@@ -23,6 +23,8 @@ $(call inherit-product, frameworks/native/build/phone-hdpi-512-dalvik-heap.mk)
 
 $(call inherit-product-if-exists, vendor/samsung/logan2g/logan2g-vendor.mk)
 
+PRODUCT_AAPT_PREF_CONFIG := hdpi
+
 ## overlays
 DEVICE_PACKAGE_OVERLAYS += device/samsung/logan2g/overlay
 
@@ -88,7 +90,8 @@ PRODUCT_PACKAGES += \
 # Graphics
 PRODUCT_PACKAGES += \
 	gralloc.sc6820i \
-	libUMP
+	libUMP \
+    hwcomposer.sc6820i
 	
 # Idc
 PRODUCT_COPY_FILES += \
