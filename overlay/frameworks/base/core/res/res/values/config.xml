@@ -147,4 +147,6 @@
          don't support RIL_REQUEST_GET_RADIO_CAPABILITY
          format is UMTS|LTE|... -->
     <string translatable="false" name="config_radio_access_family">GSM</string>
+    <bool name="config_supportMicNearUltrasound">false</bool>
+    <bool name="config_supportSpeakerNearUltrasound">false</bool>
 </resources>

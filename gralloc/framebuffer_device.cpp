@@ -242,7 +242,7 @@ int init_frame_buffer_locked(struct private_module_t* module)
 	   Set TARGET_LCD_WIDTH and TARGET_LCD_HEIGHT in BoardConfig.mk, filling it with appropriate values.
 	   
 	   If you are unsure, atleast define TARGET_LCD_SIZE flag in BoardConfig.mk and fill it with the screen diagonal length (in inches ofc). (It should be easy to find out because it WILL BE mentioned in device's spec sheet.
-	   Also set TARGET_SCREEN_WIDTH and TARGET_SCREEN_HEIGHT in BoardConfig.mk, and fill it with device resolution for appropriate axes respectively.
+	   Also set 480 and 800 in BoardConfig.mk, and fill it with device resolution for appropriate axes respectively.
 	   
 	   Worst cases? Determine by default way then.*/
 
@@ -251,8 +251,8 @@ int init_frame_buffer_locked(struct private_module_t* module)
 	info.height = TARGET_LCD_HEIGHT;
 #else	   
 #ifdef TARGET_LCD_SIZE	 
-	info.width =  TARGET_SCREEN_WIDTH * sqrt(pow(TARGET_LCD_SIZE * 25.4f,2) - (pow(TARGET_SCREEN_HEIGHT,2) + pow(TARGET_SCREEN_WIDTH,2)));
-	info.height =  TARGET_SCREEN_HEIGHT * sqrt(pow(TARGET_LCD_SIZE * 25.4f,2) - (pow(TARGET_SCREEN_HEIGHT,2) + pow(TARGET_SCREEN_WIDTH,2)));
+	info.width =  480 * sqrt(pow(TARGET_LCD_SIZE * 25.4f,2) - (pow(800,2) + pow(480,2)));
+	info.height =  800 * sqrt(pow(TARGET_LCD_SIZE * 25.4f,2) - (pow(800,2) + pow(480,2)));
 #else
 	/* Looks like none of the flags were defined, use defaults*/
 	char value[PROPERTY_VALUE_MAX];

@@ -46,15 +46,18 @@
         <value>400000</value>
         <value>800000</value>
         <value>1000000</value>
+        <value>1300000</value>
     </array>
     <item name="cpu.idle">1.4</item>
     <item name="cpu.awake">44</item>
     <array name="cpu.active">
-        <value>55.4</value>
-        <value>82.1</value>
-        <value>113.7</value>
-        <value>205.4</value>
-        <value>259.0</value>
+	    <value>48</value>
+	    <value>58</value>
+	    <value>68</value>
+        <value>78</value>
+        <value>87</value>
+        <value>112</value>
+        <value>127</value>
   </array>
   <!-- This is the battery capacity in mAh -->
   <item name="battery.capacity">1500</item>

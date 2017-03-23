@@ -93,7 +93,6 @@ NEEDS_LOGAN_MEMORYHEAPION := true
 BOARD_EGL_CFG := device/samsung/logan2g/egl/egl.cfg
 USE_SPRD_HWCOMPOSER := true
 
-
 # Fix shutdown
 WITH_CM_CHARGER := false
 
