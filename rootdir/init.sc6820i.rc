@@ -9,11 +9,11 @@ on init
     export LD_PRELOAD /system/lib/libsamsung_symbols.so
     export LD_SHIM_LIBS /system/lib/libutils.so|libsamsung_symbols.so:/system/lib/libril.so|libsamsung_symbols.so:/system/lib/libstagefright.so|libsamsung_symbols.so
     stop ril-daemon
-	symlink /sdcard /mnt/sdcard
+    symlink /sdcard /mnt/sdcard
     symlink /sdcard /storage/sdcard0
-	export SECONDARY_STORAGE /storage/sdcard1
-	mkdir /mnt/media_rw/sdcard1 0700 media_rw media_rw
-	mkdir /storage/sdcard1 0700 root root
+    export SECONDARY_STORAGE /storage/sdcard1
+    mkdir /mnt/media_rw/sdcard1 0700 media_rw media_rw
+    mkdir /storage/sdcard1 0700 root root
 
 # To store widevine keybox
     symlink /data/app /factory
