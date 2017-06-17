@@ -1,4 +1,4 @@
-# Copyright (C) 2013 The CyanogenMod Project
+# Copyright (C) 2016 The CyanogenMod Project
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -81,7 +81,6 @@ BOARD_UMS_LUNFILE := "/sys/class/android_usb/android0/f_mass_storage/lun/file"
 TARGET_USE_CUSTOM_LUN_FILE_PATH := "/sys/devices/platform/dwc_otg.0/gadget/lun0/file"
 
 # Graphics
-#TARGET_FORCE_SCREENSHOT_CPU_PATH := true
 USE_OPENGL_RENDERER := true
 BOARD_EGL_NEEDS_HANDLE_VALUE := true
 MALLOC_IMPL := dlmalloc
@@ -91,14 +90,12 @@ BOARD_EGL_NEEDS_FNW := true
 TARGET_RUNNING_WITHOUT_SYNC_FRAMEWORK := true
 NEEDS_LOGAN_MEMORYHEAPION := true
 BOARD_EGL_CFG := device/samsung/logan2g/egl/egl.cfg
-USE_SPRD_HWCOMPOSER := true
 
 # Fix shutdown
 WITH_CM_CHARGER := false
 
 # Camera
 COMMON_GLOBAL_CFLAGS += -DMR0_CAMERA_BLOB
-NEEDS_MEMORYHEAPION := true
 CAMERA_SUPPORT_SIZE := 2M
 TARGET_BOARD_NO_FRONT_SENSOR := true
 

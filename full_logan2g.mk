@@ -15,13 +15,13 @@
 # Most specific first.
 $(call inherit-product, $(SRC_TARGET_DIR)/product/full_base_telephony.mk)
 # Inherit from the common Open Source product configuration
-$(call inherit-product, $(SRC_TARGET_DIR)/product/aosp_base_telephony.mk)
+#$(call inherit-product, $(SRC_TARGET_DIR)/product/aosp_base_telephony.mk)
 
 # Inherit device specific files
 $(call inherit-product, device/samsung/logan2g/device_logan2g.mk)
 
 # Overrides
-PRODUCT_NAME := pa_logan2g
+PRODUCT_NAME := full_logan2g
 PRODUCT_DEVICE := logan2g
 PRODUCT_BRAND := samsung
 PRODUCT_MODEL := GT-S7262

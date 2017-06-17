@@ -68,8 +68,7 @@ PRODUCT_PROPERTY_OVERRIDES += \
 
 # Packages
 PRODUCT_PACKAGES := \
-    libstlport \
-    libmemoryheapion 
+    	libstlport 
 
 #Wifi
 PRODUCT_PACKAGES += \
@@ -84,14 +83,13 @@ PRODUCT_PACKAGES += \
 	audio.usb.default \
 	audio.r_submix.default \
 	libtinyalsa \
-	tinymix \
-    busybox 
+	tinymix 
 
 # Graphics
 PRODUCT_PACKAGES += \
 	gralloc.sc6820i \
-	libUMP \
-    hwcomposer.sc6820i
+	libUMP 
+
 
 # Codecs
 PRODUCT_PACKAGES += \
@@ -135,7 +133,7 @@ PRODUCT_COPY_FILES += \
 
 # Compatibility symbols wrappers
 PRODUCT_PACKAGES += \
-    libsamsung_symbols
+    	libsamsung_symbols
 
 
 # Device props
@@ -147,8 +145,8 @@ PRODUCT_PROPERTY_OVERRIDES := \
 # enable Google-specific location features,
 # like NetworkLocationProvider and LocationCollector
 PRODUCT_PROPERTY_OVERRIDES += \
-    ro.com.google.locationfeatures=1 \
-    ro.com.google.networklocation=1
+    	ro.com.google.locationfeatures=1 \
+    	ro.com.google.networklocation=1
 
 # Permissions
 PERMISSION_XML_FILES := \
@@ -175,45 +173,44 @@ PRODUCT_COPY_FILES += \
 # before they have a chance to cause problems.
 # Default=true for development builds, set by android buildsystem.
 PRODUCT_PROPERTY_OVERRIDES += \
-    wifi.interface=wlan0 \
-    ro.zygote.disable_gl_preload=true \
-    persist.msms.phone_count=2 \
-    persist.radio.multisim.config=dsds \
-    ro.telephony.call_ring.multiple=0 \
-    dalvik.vm.heapgrowthlimit=46m \
-    dalvik.vm.heapsize=92m \
-    ro.telephony.ril_class=SamsungLogan2GRIL
-    ro.telephony.call_ring=0 
+    	wifi.interface=wlan0 \
+    	ro.zygote.disable_gl_preload=true \
+    	persist.msms.phone_count=2 \
+    	persist.radio.multisim.config=dsds \
+    	ro.telephony.call_ring.multiple=0 \
+    	dalvik.vm.heapgrowthlimit=46m \
+    	dalvik.vm.heapsize=92m \
+    	ro.telephony.ril_class=SamsungLogan2GRIL
+    	ro.telephony.call_ring=0 
 
 # Filesystem management tools
 PRODUCT_PACKAGES += \
-    setup_fs \
+    	setup_fs \
 
 # Misc packages
 PRODUCT_PACKAGES += \
-    com.android.future.usb.accessory \
+    	com.android.future.usb.accessory \
     
 # Samsung Service Mode
 PRODUCT_PACKAGES += \
-    SamsungServiceMode
+    	SamsungServiceMode
 
 
 # Web
 PRODUCT_PACKAGES += \
-    libskia_legacy
+    	libskia_legacy
     
 # Camera
 PRODUCT_PACKAGES += \
-    Gallery2 \
-    camera.sc6820i \
-    Snap \
-    libmemoryheapion
+    	Gallery2 \
+    	camera.sc6820i \
+    	Snap 
 
 PRODUCT_DEFAULT_PROPERTY_OVERRIDES += \
-    persist.sys.usb.config=adb,mtp \
-    ro.adb.secure=0 \
-    ro.secure=0 \
-    ro.debuggable=1
+    	persist.sys.usb.config=adb,mtp \
+    	ro.adb.secure=0 \
+    	ro.secure=0 \
+    	ro.debuggable=1
 
     
 # ART device props
@@ -230,7 +227,7 @@ PRODUCT_PROPERTY_OVERRIDES += \
     
 # Force use old camera api
 PRODUCT_PROPERTY_OVERRIDES += \
-    camera2.portability.force_api=1
+    	camera2.portability.force_api=1
     
 PRODUCT_TAGS += dalvik.gc.type-precise 
 
