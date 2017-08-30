@@ -1,11 +1,8 @@
 ## Specify phone tech before including full_phone
-$(call inherit-product, vendor/cm/config/telephony.mk)
+$(call inherit-product, vendor/xenonhd/configs/telephony.mk)
 
 # Release name
 PRODUCT_RELEASE_NAME := logan2g
-
-# Inherit some common Lineage stuff.
-$(call inherit-product, vendor/cm/config/common_full_phone.mk)
 
 # Inherit device configuration
 $(call inherit-product, device/samsung/logan2g/full_logan2g.mk)
@@ -18,7 +15,7 @@ PRODUCT_BUILD_PROP_OVERRIDES += \
     PRIVATE_BUILD_DESC="logan2gxx-user 4.1.2 JZO54K S7262XEUANE1 release-keys"
     
 
-PRODUCT_NAME := lineage_logan2g
+PRODUCT_NAME := xenonhd_logan2g
 PRODUCT_DEVICE := logan2g
 
 # Root
